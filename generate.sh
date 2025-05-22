@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Generate Packages file
-dpkg-scanpackages debs /dev/null > Packages
+# Generate Packages with proper architecture mapping
+dpkg-scanpackages -m debs / > Packages 2>/dev/null
 
 # Create compressed versions
 gzip -c9 Packages > Packages.gz
@@ -20,7 +20,7 @@ Components: main
 Description: Screenshot Monitor Tweak Repository
 RELEASE_EOF
 
-# Add hashes to Release (Mac-specific commands)
+# Add hashes (Mac-specific formatting)
 echo "MD5Sum:" >> Release
 md5 debs/*.deb | sed 's/MD5 (//;s/) = / /' | awk '{print " " $2 " " $3 " ./debs/" $1}' >> Release
 
@@ -29,3 +29,6 @@ shasum -a 1 debs/*.deb | sed 's/debs\///' | awk '{print " " $1 " " $2 " ./debs/"
 
 echo "SHA256:" >> Release
 shasum -a 256 debs/*.deb | sed 's/debs\///' | awk '{print " " $1 " " $2 " ./debs/" $2}' >> Release
+
+# Final size verification
+echo "Size: $(wc -c < Packages)" >> Release
