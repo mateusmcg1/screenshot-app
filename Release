@@ -3,5 +3,5 @@ Label: Screenshot App Repo
 Suite: stable
 Version: 1.0
 Codename: ios
-Architectures: iphoneos-arm
+Architecture: iphoneos-arm
 Description: Screenshot Monitor Tweak Repository
