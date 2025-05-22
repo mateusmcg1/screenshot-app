@@ -7,8 +7,8 @@ Architectures: iphoneos-arm
 Components: main
 Description: Screenshot Monitor Tweak Repository
 MD5Sum:
- 8df4155f24194c36b8de854cd4bd4252 14344 ./debs/com.mateus.screenshotmonitor_0.0.1-1+debug_iphoneos-arm.deb
+ 8df4155f24194c36b8de854cd4bd4252  ./debs/debs/com.mateus.screenshotmonitor_0.0.1-1+debug_iphoneos-arm.deb
 SHA1:
- 52048e4e4a177d5b38b18d76452ac80496845e18 14344 ./debs/com.mateus.screenshotmonitor_0.0.1-1+debug_iphoneos-arm.deb
+ 52048e4e4a177d5b38b18d76452ac80496845e18 com.mateus.screenshotmonitor_0.0.1-1+debug_iphoneos-arm.deb ./debs/com.mateus.screenshotmonitor_0.0.1-1+debug_iphoneos-arm.deb
 SHA256:
- de228f1ead61ab8b388543d5199f7cacbc86798fa65c495018c5a08a55531faf 14344 ./debs/com.mateus.screenshotmonitor_0.0.1-1+debug_iphoneos-arm.deb
+ de228f1ead61ab8b388543d5199f7cacbc86798fa65c495018c5a08a55531faf com.mateus.screenshotmonitor_0.0.1-1+debug_iphoneos-arm.deb ./debs/com.mateus.screenshotmonitor_0.0.1-1+debug_iphoneos-arm.deb
