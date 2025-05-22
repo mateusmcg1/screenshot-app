@@ -22,13 +22,13 @@ RELEASE_EOF
 
 # Add hashes (Mac-specific formatting)
 echo "MD5Sum:" >> Release
-md5 debs/*.deb | sed 's/MD5 (//;s/) = / /' | awk '{print " " $2 " " $3 " ./debs/" $1}' >> Release
+md5 -q debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "./debs/" f}' >> Release
 
 echo "SHA1:" >> Release
-shasum -a 1 debs/*.deb | sed 's/debs\///' | awk '{print " " $1 " " $2 " ./debs/" $2}' >> Release
+shasum debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "./debs/" f}' >> Release
 
 echo "SHA256:" >> Release
-shasum -a 256 debs/*.deb | sed 's/debs\///' | awk '{print " " $1 " " $2 " ./debs/" $2}' >> Release
+shasum -a 256 debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "./debs/" f}' >> Release
 
 # Final size verification
 echo "Size: $(wc -c < Packages)" >> Release
