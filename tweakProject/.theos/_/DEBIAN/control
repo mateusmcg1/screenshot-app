@@ -5,6 +5,6 @@ Description: Automatic screenshot capture and upload
 Maintainer: Mateus Cavalcanti
 Author: Mateus Cavalcanti
 Section: Tweaks 
-Architecture: arm64
-Version: 0.0.1-9+debug
+Architecture: iphoneos-arm64
+Version: 0.0.1-10+debug
 Installed-Size: 60
