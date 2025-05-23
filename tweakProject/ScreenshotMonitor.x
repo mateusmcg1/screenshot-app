@@ -39,12 +39,7 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
 
 %new
 -(void)captureAndUploadScreenshot {
-    UIImage *screenshot = [self takeScreenshot];
-    if (screenshot) {
-        [self uploadScreenshot:screenshot];
-    } else {
-        NSLog(@"[ScreenshotMonitor] Failed to capture screenshot");
-    }
+    NSLog(@"[ScreenshotMonitor] captureAndUploadScreenshot called!");
 }
 
 %new
