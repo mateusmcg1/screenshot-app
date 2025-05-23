@@ -44,23 +44,23 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
 -(void)captureAndUploadScreenshot {
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
-            // UIImage *screenshot = [self takeScreenshot];
-            // if (screenshot) {
-                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-                NSLog(@"[ScreenshotMonitor] Screenshot (dummy)!");
-                // Show a visual alert
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor"
-                                                                               message:@"Timer fired!"
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [alert dismissViewControllerAnimated:YES completion:nil];
-                });
-                UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-                [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-            // } else {
-            //     NSLog(@"[ScreenshotMonitor] Failed to capture screenshot");
-            //     AudioServicesPlaySystemSound(1007);
-            // }
+            UIImage *screenshot = [self takeScreenshot];
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+            NSLog(@"[ScreenshotMonitor] Screenshot (dummy)!");
+            // Show a visual alert
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor"
+                                                                           message:@"Timer fired!"
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [alert dismissViewControllerAnimated:YES completion:nil];
+            });
+            UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+            [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+
+            // Test upload with dummy image
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                [self uploadScreenshot:screenshot];
+            });
         }
     });
 }
