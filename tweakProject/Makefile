@@ -9,6 +9,7 @@ ScreenshotMonitor_TARGET = iphone:clang:16.7:14.0
 THEOS_PACKAGE_BASE_VERSION = 0.0.1
 THEOS_PACKAGE_BUILD_VERSION = 1
 
-ARCHS = arm64 arm64e
+ARCHS = arm64
+PACKAGE_ARCH = arm64
 
 include $(THEOS_MAKE_PATH)/tweak.mk
