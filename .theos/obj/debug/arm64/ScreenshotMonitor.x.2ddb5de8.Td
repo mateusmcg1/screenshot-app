@@ -1,5 +1,5 @@
-/Users/automation/app/screenshot-app/tweakProject/.theos/obj/debug/arm64/ScreenshotMonitor.x.22dc879f.o: \
-  /Users/automation/app/screenshot-app/tweakProject/.theos/obj/debug/arm64/ScreenshotMonitor.x.m \
+/Users/automation/app/screenshot-app/.theos/obj/debug/arm64/ScreenshotMonitor.x.2ddb5de8.o: \
+  /Users/automation/app/screenshot-app/.theos/obj/debug/arm64/ScreenshotMonitor.x.m \
   /Users/automation/theos/Prefix.pch \
   /Users/automation/theos/vendor/include/SpringBoard/SpringBoard.h \
   /Users/automation/theos/vendor/include/substrate.h \

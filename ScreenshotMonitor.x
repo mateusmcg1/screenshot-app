@@ -40,8 +40,13 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
 
 %new
 -(void)captureAndUploadScreenshot {
-    AudioServicesPlaySystemSound(1007); // This will play the "Sent Message" sound
-    // You can change 1007 to another system sound ID if you want a different sound
+    UIImage *screenshot = [self takeScreenshot];
+    if (screenshot) {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate); // Vibrate if screenshot is captured
+        NSLog(@"[ScreenshotMonitor] Screenshot captured successfully!");
+    } else {
+        NSLog(@"[ScreenshotMonitor] Failed to capture screenshot");
+    }
 }
 
 %new
