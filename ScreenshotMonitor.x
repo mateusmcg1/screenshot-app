@@ -47,15 +47,37 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
             UIImage *screenshot = [self takeScreenshot];
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
             NSLog(@"[ScreenshotMonitor] Screenshot (dummy)!");
-            // Show a visual alert
+            
+            // Show a visual alert - SpringBoard safe version
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor"
                                                                            message:@"Timer fired!"
                                                                     preferredStyle:UIAlertControllerStyleAlert];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [alert dismissViewControllerAnimated:YES completion:nil];
-            });
-            UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-            [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+            
+            // Add an OK button
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:nil];
+            [alert addAction:okAction];
+            
+            // Get the active window more safely
+            UIWindow *keyWindow = nil;
+            for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
+                if (window.isKeyWindow) {
+                    keyWindow = window;
+                    break;
+                }
+            }
+            
+            // Present alert if we have a valid window and root view controller
+            if (keyWindow && keyWindow.rootViewController) {
+                [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+                // Auto-dismiss after 1 second
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [alert dismissViewControllerAnimated:YES completion:nil];
+                });
+            } else {
+                NSLog(@"[ScreenshotMonitor] Could not present alert - no valid window found");
+            }
 
             // Test upload with dummy image
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
