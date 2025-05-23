@@ -1,0 +1,9 @@
+Package: com.mateus.screenshotmonitor
+Name: ScreenshotMonitor
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: Automatic screenshot capture and upload
+Maintainer: Mateus Cavalcanti
+Author: Mateus Cavalcanti
+Section: Tweaks 

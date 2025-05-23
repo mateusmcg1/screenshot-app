@@ -1,0 +1,17 @@
+---
+triple:          'armv7-apple-darwin'
+binary-path:     '/Users/automation/app/screenshot-app/tweakProject/.theos/obj/debug/armv7/ScreenshotMonitor.dylib'
+relocations:
+  - { offset: 0x1E, size: 0x4, addend: 0x0, symName: __logosLocalCtor_27b85f3b, symObjAddr: 0x0, symBinAddr: 0x671C, symSize: 0x1E }
+  - { offset: 0x33, size: 0x4, addend: 0x0, symName: _API_ENDPOINT, symObjAddr: 0x14A0, symBinAddr: 0x82C0, symSize: 0x0 }
+  - { offset: 0xA2, size: 0x4, addend: 0x0, symName: _DEVICE_ID, symObjAddr: 0xAF0C, symBinAddr: 0x82C8, symSize: 0x0 }
+  - { offset: 0xC1, size: 0x4, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0xAF10, symBinAddr: 0x82CC, symSize: 0x0 }
+  - { offset: 0x1ED9, size: 0x4, addend: 0x0, symName: _SCREENSHOT_INTERVAL, symObjAddr: 0x14A4, symBinAddr: 0x82C4, symSize: 0x0 }
+  - { offset: 0x2148, size: 0x4, addend: 0x0, symName: __logosLocalCtor_27b85f3b, symObjAddr: 0x0, symBinAddr: 0x671C, symSize: 0x1E }
+  - { offset: 0x2184, size: 0x4, addend: 0x0, symName: __logosLocalInit, symObjAddr: 0x1E, symBinAddr: 0x673A, symSize: 0x21A }
+  - { offset: 0x2222, size: 0x4, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x238, symBinAddr: 0x6954, symSize: 0x174 }
+  - { offset: 0x225E, size: 0x4, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$captureAndUploadScreenshot', symObjAddr: 0x3AC, symBinAddr: 0x6AC8, symSize: 0x5C }
+  - { offset: 0x229A, size: 0x4, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$takeScreenshot', symObjAddr: 0x408, symBinAddr: 0x6B24, symSize: 0x4A4 }
+  - { offset: 0x232B, size: 0x4, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$uploadScreenshot$', symObjAddr: 0x8AC, symBinAddr: 0x6FC8, symSize: 0x630 }
+  - { offset: 0x23F1, size: 0x4, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$uploadScreenshot$_block_invoke', symObjAddr: 0xEDC, symBinAddr: 0x75F8, symSize: 0x12E }
+...

@@ -1,30 +1,34 @@
 #!/bin/bash
 
 # 1. Clean previous files
-rm -rf debs/*.deb Packages* dists/
+rm -rf debs/*.deb Packages*
 
-# 2. Copy new .deb file
-cp ../ios-screen/packages/*.deb debs/
+# 2. Build the tweak
+cd tweakProject
+make
+cd ..
 
-# 3. Generate Packages file
+# 3. Copy the .deb file to debs directory
+cp tweakProject/packages/*.deb debs/
+
+# 4. Generate Packages file
 dpkg-scanpackages -m debs /dev/null > Packages
 
-# 4. Create compressed Packages
+# 5. Create compressed Packages
 gzip -9f Packages -c > Packages.gz
-bzip2 -9f Packages -c > Packages.bz2
-xz -9f Packages -c > Packages.xz
-
-# 5. Create directory structure and move files
-mkdir -p dists/ios/main/binary-iphoneos-arm
-mv Packages Packages.gz Packages.bz2 Packages.xz dists/ios/main/binary-iphoneos-arm/
 
 # 6. Create Release file
-cat > dists/ios/Release <<EOF
+cat > Release <<EOF
 Origin: mateusmcg1
+Label: Screenshot Monitor
+Suite: stable
+Version: 1.0
+Codename: ios
 Architectures: iphoneos-arm
 Components: main
+Description: Screenshot Monitor Tweak Repository
 EOF
 
 # 7. Verify final files
 echo "=== Repository Contents ==="
-find dists/ -type f -print -exec sh -c 'echo "{}:" && ls -l {}' \;
+ls -la
