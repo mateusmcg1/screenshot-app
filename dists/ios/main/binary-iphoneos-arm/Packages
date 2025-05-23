@@ -1,0 +1,16 @@
+Package: com.mateus.screenshotmonitor
+Version: 0.0.1-11+debug
+Architecture: iphoneos-arm
+Maintainer: Mateus Cavalcanti
+Installed-Size: 220
+Depends: mobilesubstrate
+Filename: debs/com.mateus.screenshotmonitor_0.0.1-11+debug_iphoneos-arm.deb
+Size: 14346
+MD5sum: fcf8bdd116e5cc81bcb9bcebe31c2346
+SHA1: c2da16767a49756faa4b966eef89b6b5bb5b90f5
+SHA256: 09094297c9966cb8b3000a0f7dcd9a331dad4f113caf38c3a37312f0aeea8509
+Section: Tweaks
+Description: Automatic screenshot capture and upload
+Author: Mateus Cavalcanti
+Name: ScreenshotMonitor
+

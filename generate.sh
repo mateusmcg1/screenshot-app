@@ -1,37 +1,30 @@
 #!/bin/bash
 
-# Ensure the .deb file is in the debs folder
+# 1. Clean previous files
+rm -rf debs/*.deb Packages* dists/
+
+# 2. Copy new .deb file
 cp ../ios-screen/packages/*.deb debs/
 
-# Generate Packages with proper architecture mapping
-dpkg-scanpackages -m debs /dev/null > Packages 2>/dev/null
+# 3. Generate Packages file
+dpkg-scanpackages -m debs /dev/null > Packages
 
-# Create compressed versions
-gzip -c9 Packages > Packages.gz
-bzip2 -c9 Packages > Packages.bz2
-xz -c9 Packages > Packages.xz
+# 4. Create compressed Packages
+gzip -9f Packages -c > Packages.gz
+bzip2 -9f Packages -c > Packages.bz2
+xz -9f Packages -c > Packages.xz
 
-# Generate Release file
-cat > Release <<RELEASE_EOF
+# 5. Create directory structure and move files
+mkdir -p dists/ios/main/binary-iphoneos-arm
+mv Packages Packages.gz Packages.bz2 Packages.xz dists/ios/main/binary-iphoneos-arm/
+
+# 6. Create Release file
+cat > dists/ios/Release <<EOF
 Origin: mateusmcg1
-Label: Screenshot App Repo
-Suite: stable
-Version: 1.0
-Codename: ios
 Architectures: iphoneos-arm
 Components: main
-Description: Screenshot Monitor Tweak Repository
-RELEASE_EOF
+EOF
 
-# Add hashes (correct path formatting)
-echo "MD5Sum:" >> Release
-md5 -q debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "debs/" f}' >> Release
-
-echo "SHA1:" >> Release
-shasum debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "debs/" f}' >> Release
-
-echo "SHA256:" >> Release
-shasum -a 256 debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "debs/" f}' >> Release
-
-# Final size verification
-echo "Size: $(wc -c < Packages)" >> Release
+# 7. Verify final files
+echo "=== Repository Contents ==="
+find dists/ -type f -print -exec sh -c 'echo "{}:" && ls -l {}' \;
