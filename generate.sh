@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# Ensure the .deb file is in the debs folder
+cp ../ios-screen/packages/*.deb debs/
+
 # Generate Packages with proper architecture mapping
-dpkg-scanpackages -m debs / > Packages 2>/dev/null
+dpkg-scanpackages -m debs /dev/null > Packages 2>/dev/null
 
 # Create compressed versions
 gzip -c9 Packages > Packages.gz
@@ -20,15 +23,15 @@ Components: main
 Description: Screenshot Monitor Tweak Repository
 RELEASE_EOF
 
-# Add hashes (Mac-specific formatting)
+# Add hashes (correct path formatting)
 echo "MD5Sum:" >> Release
-md5 -q debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "./debs/" f}' >> Release
+md5 -q debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "debs/" f}' >> Release
 
 echo "SHA1:" >> Release
-shasum debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "./debs/" f}' >> Release
+shasum debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "debs/" f}' >> Release
 
 echo "SHA256:" >> Release
-shasum -a 256 debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "./debs/" f}' >> Release
+shasum -a 256 debs/*.deb | awk -v f=$(basename debs/*.deb) -v s=$(stat -f%z debs/*.deb) '{print " " $1, s, "debs/" f}' >> Release
 
 # Final size verification
 echo "Size: $(wc -c < Packages)" >> Release
