@@ -44,71 +44,36 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
 -(void)captureAndUploadScreenshot {
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
-            UIImage *screenshot = [self takeScreenshot];
-            if (screenshot) {
+            // UIImage *screenshot = [self takeScreenshot];
+            // if (screenshot) {
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-                NSLog(@"[ScreenshotMonitor] Screenshot captured successfully!");
-
+                NSLog(@"[ScreenshotMonitor] Screenshot (dummy)!");
                 // Show a visual alert
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor"
-                                                                               message:@"Screenshot captured!"
+                                                                               message:@"Timer fired!"
                                                                         preferredStyle:UIAlertControllerStyleAlert];
-                // Dismiss after 1 second
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [alert dismissViewControllerAnimated:YES completion:nil];
                 });
-                // Present the alert
                 UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
                 [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-
-                // Optionally upload in background
-                // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                //     [self uploadScreenshot:screenshot];
-                // });
-            } else {
-                NSLog(@"[ScreenshotMonitor] Failed to capture screenshot");
-                AudioServicesPlaySystemSound(1007);
-            }
+            // } else {
+            //     NSLog(@"[ScreenshotMonitor] Failed to capture screenshot");
+            //     AudioServicesPlaySystemSound(1007);
+            // }
         }
     });
 }
 
 %new
 -(UIImage *)takeScreenshot {
-    @try {
-        UIScreen *mainScreen = [UIScreen mainScreen];
-        CGFloat scale = mainScreen.scale;
-        CGRect bounds = mainScreen.bounds;
-
-        CGSize size = bounds.size;
-        size.width *= scale;
-        size.height *= scale;
-
-        CGBitmapInfo bitmapInfo = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-
-        CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, colorSpace, bitmapInfo);
-        CGColorSpaceRelease(colorSpace);
-
-        if (!context) {
-            NSLog(@"[ScreenshotMonitor] Failed to create bitmap context");
-            return nil;
-        }
-
-        // Render the display
-        CARenderServerRenderDisplay(0, CFSTR("LCD"), context, bounds, 0);
-
-        CGImageRef imageRef = CGBitmapContextCreateImage(context);
-        UIImage *screenshot = [UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
-
-        CGImageRelease(imageRef);
-        CGContextRelease(context);
-
-        return screenshot;
-    } @catch (NSException *exception) {
-        NSLog(@"[ScreenshotMonitor] Exception taking screenshot: %@", exception);
-        return nil;
-    }
+    CGSize size = CGSizeMake(100, 100);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+    [[UIColor redColor] setFill];
+    UIRectFill(CGRectMake(0, 0, size.width, size.height));
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 %new
