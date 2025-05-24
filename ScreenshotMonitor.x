@@ -5,7 +5,6 @@
 
 // Configuration - Change these values
 static NSString *API_ENDPOINT = @"http://186.190.215.38:3000/screenshots/device/";
-static NSInteger SCREENSHOT_INTERVAL = 60; // 1 minute in seconds
 static NSString *DEVICE_ID = nil; // Will be set to device UDID
 
 // Declare the new methods in SpringBoard interface
