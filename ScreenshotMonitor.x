@@ -47,37 +47,15 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
             UIImage *screenshot = [self takeScreenshot];
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
             NSLog(@"[ScreenshotMonitor] Screenshot (dummy)!");
-            
-            // Show a visual alert - SpringBoard safe version
+            // Show a visual alert
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor"
                                                                            message:@"Timer fired!"
                                                                     preferredStyle:UIAlertControllerStyleAlert];
-            
-            // Add an OK button
-            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
-                                                              style:UIAlertActionStyleDefault
-                                                            handler:nil];
-            [alert addAction:okAction];
-            
-            // Get the active window more safely
-            UIWindow *keyWindow = nil;
-            for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
-                if (window.isKeyWindow) {
-                    keyWindow = window;
-                    break;
-                }
-            }
-            
-            // Present alert if we have a valid window and root view controller
-            if (keyWindow && keyWindow.rootViewController) {
-                [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-                // Auto-dismiss after 1 second
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [alert dismissViewControllerAnimated:YES completion:nil];
-                });
-            } else {
-                NSLog(@"[ScreenshotMonitor] Could not present alert - no valid window found");
-            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [alert dismissViewControllerAnimated:YES completion:nil];
+            });
+            UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+            [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
 
             // Test upload with dummy image
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -104,63 +82,36 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
     NSData *imageData = UIImageJPEGRepresentation(screenshot, 0.8);
     if (!imageData) {
         NSLog(@"[ScreenshotMonitor] Failed to convert screenshot to JPEG");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor"
+                                                                           message:@"Failed to convert screenshot"
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+            [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [alert dismissViewControllerAnimated:YES completion:nil];
+            });
+        });
         return;
     }
 
     // Build the URL with device ID in the path
     NSString *urlString = [NSString stringWithFormat:@"%@%@", API_ENDPOINT, DEVICE_ID];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    [request setHTTPMethod:@"POST"];
-
-    // Create multipart form data
-    NSString *boundary = [NSString stringWithFormat:@"Boundary-%@", [[NSUUID UUID] UUIDString]];
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-    [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
-
-    // Create body
-    NSMutableData *body = [NSMutableData data];
-
-    // Add timestamp field (as Unix time string)
-    NSString *timestamp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=\"timestamp\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[timestamp dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-
-    // Add image data
-    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=\"screenshot\"; filename=\"screenshot.jpg\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:imageData];
-    [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-
-    // End multipart form
-    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-
-    [request setHTTPBody:body];
-
-    // Create task
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
-                                            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            NSLog(@"[ScreenshotMonitor] Upload error: %@", error);
-            return;
-        }
-
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-            NSLog(@"[ScreenshotMonitor] Screenshot uploaded successfully");
-        } else {
-            NSLog(@"[ScreenshotMonitor] Upload failed with status code: %ld", (long)httpResponse.statusCode);
-            if (data) {
-                NSString *responseStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                NSLog(@"[ScreenshotMonitor] Response: %@", responseStr);
-            }
-        }
-    }];
-
-    [task resume];
+    
+    // Show alert with API info instead of making the request
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *message = [NSString stringWithFormat:@"Would upload to:\n%@\n\nDevice ID: %@", urlString, DEVICE_ID];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor"
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+        [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        });
+    });
+    
+    NSLog(@"[ScreenshotMonitor] Would upload to: %@", urlString);
 }
 
 %end
