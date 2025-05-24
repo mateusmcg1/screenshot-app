@@ -37,6 +37,15 @@ static NSString *DEVICE_ID = nil; // Will be set to device UDID
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor"
                                                                        message:message
                                                                 preferredStyle:UIAlertControllerStyleAlert];
+        
+        // Add OK button
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction *action) {
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        [alert addAction:okAction];
+        
         UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
         [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
         
