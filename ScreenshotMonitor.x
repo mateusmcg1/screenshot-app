@@ -229,8 +229,8 @@ static NSTimer *debugTimer = nil; // Timer for debug window updates
     
     [self logDebug:@"JSON data prepared successfully"];
     
-    // Create URL with device ID
-    NSString *urlString = [NSString stringWithFormat:@"%@%@", API_ENDPOINT, DEVICE_ID];
+    // Use API endpoint as-is (deviceId is in the body)
+    NSString *urlString = API_ENDPOINT;
     NSURL *url = [NSURL URLWithString:urlString];
     
     // Create request
