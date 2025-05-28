@@ -12,6 +12,6 @@ THEOS_PACKAGE_BUILD_VERSION = 1
 ARCHS = arm64 arm64e
 THEOS_PACKAGE_SCHEME = rootless
 
-ScreenshotMonitor_FRAMEWORKS = UIKit Foundation
+ScreenshotMonitor_FRAMEWORKS = UIKit Foundation IOKit
 
 include $(THEOS_MAKE_PATH)/tweak.mk

