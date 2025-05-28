@@ -6,5 +6,5 @@ Maintainer: Mateus Cavalcanti
 Author: Mateus Cavalcanti
 Section: Tweaks 
 Architecture: iphoneos-arm64
-Version: 0.0.1-26+debug
-Installed-Size: 80
+Version: 0.0.1-27+debug
+Installed-Size: 156

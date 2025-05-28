@@ -2,40 +2,19 @@
 triple:          'arm64-apple-darwin'
 binary-path:     '/Users/automation/app/screenshot-app/.theos/obj/debug/arm64/ScreenshotMonitor.dylib'
 relocations:
-  - { offset: 0x1E, size: 0x8, addend: 0x0, symName: __logosLocalCtor_93214392, symObjAddr: 0x0, symBinAddr: 0x8000, symSize: 0x30 }
-  - { offset: 0x37, size: 0x8, addend: 0x0, symName: _API_ENDPOINT, symObjAddr: 0x32F8, symBinAddr: 0xCA50, symSize: 0x0 }
-  - { offset: 0xAA, size: 0x8, addend: 0x0, symName: _DEVICE_ID, symObjAddr: 0xD938, symBinAddr: 0xCA60, symSize: 0x0 }
-  - { offset: 0xBF, size: 0x8, addend: 0x0, symName: _actionLogs, symObjAddr: 0xD940, symBinAddr: 0xCA68, symSize: 0x0 }
-  - { offset: 0x106, size: 0x8, addend: 0x0, symName: _debugLogs, symObjAddr: 0xD948, symBinAddr: 0xCA70, symSize: 0x0 }
-  - { offset: 0x11B, size: 0x8, addend: 0x0, symName: _updateTimer, symObjAddr: 0xD950, symBinAddr: 0xCA78, symSize: 0x0 }
-  - { offset: 0x1EF, size: 0x8, addend: 0x0, symName: _sendTimer, symObjAddr: 0xD958, symBinAddr: 0xCA80, symSize: 0x0 }
-  - { offset: 0x204, size: 0x8, addend: 0x0, symName: _debugTimer, symObjAddr: 0xD960, symBinAddr: 0xCA88, symSize: 0x0 }
-  - { offset: 0x227, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0xD968, symBinAddr: 0xCA90, symSize: 0x0 }
-  - { offset: 0x1FD9, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$launchApplicationWithIdentifier$suspended$', symObjAddr: 0xD970, symBinAddr: 0xCA98, symSize: 0x0 }
-  - { offset: 0x2009, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$terminateApplicationWithIdentifier$', symObjAddr: 0xD978, symBinAddr: 0xCAA0, symSize: 0x0 }
-  - { offset: 0x2034, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$lockScreen', symObjAddr: 0xD980, symBinAddr: 0xCAA8, symSize: 0x0 }
-  - { offset: 0x205A, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$unlockScreen', symObjAddr: 0xD988, symBinAddr: 0xCAB0, symSize: 0x0 }
-  - { offset: 0x2211, size: 0x8, addend: 0x0, symName: __logosLocalCtor_93214392, symObjAddr: 0x0, symBinAddr: 0x8000, symSize: 0x30 }
-  - { offset: 0x2255, size: 0x8, addend: 0x0, symName: __logosLocalInit, symObjAddr: 0x30, symBinAddr: 0x8030, symSize: 0x630 }
-  - { offset: 0x23CC, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x660, symBinAddr: 0x8660, symSize: 0x2AC }
-  - { offset: 0x240C, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$launchApplicationWithIdentifier$suspended$', symObjAddr: 0x90C, symBinAddr: 0x890C, symSize: 0x130 }
-  - { offset: 0x245A, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$terminateApplicationWithIdentifier$', symObjAddr: 0xA3C, symBinAddr: 0x8A3C, symSize: 0x114 }
-  - { offset: 0x249A, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$lockScreen', symObjAddr: 0xB50, symBinAddr: 0x8B50, symSize: 0x48 }
-  - { offset: 0x24CC, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$unlockScreen', symObjAddr: 0xB98, symBinAddr: 0x8B98, symSize: 0x48 }
-  - { offset: 0x24FE, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$logDebug$', symObjAddr: 0xBE0, symBinAddr: 0x8BE0, symSize: 0x188 }
-  - { offset: 0x2585, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$showDebugWindow', symObjAddr: 0xD68, symBinAddr: 0x8D68, symSize: 0x80 }
-  - { offset: 0x25CB, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$prepareActionsForSending', symObjAddr: 0xDE8, symBinAddr: 0x8DE8, symSize: 0x328 }
-  - { offset: 0x264D, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$sendActionsToServer', symObjAddr: 0x1110, symBinAddr: 0x9110, symSize: 0x340 }
-  - { offset: 0x26E5, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$startPeriodicUpdates', symObjAddr: 0x1450, symBinAddr: 0x9450, symSize: 0x7C }
-  - { offset: 0x271A, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$logAction$', symObjAddr: 0x14CC, symBinAddr: 0x94CC, symSize: 0x188 }
-  - { offset: 0x278B, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$logDeviceInfo', symObjAddr: 0x1654, symBinAddr: 0x9654, symSize: 0x80 }
-  - { offset: 0x27D5, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$showDebugWindow_block_invoke', symObjAddr: 0x16D4, symBinAddr: 0x96D4, symSize: 0x800 }
-  - { offset: 0x2902, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$showDebugWindow_block_invoke_2', symObjAddr: 0x1ED4, symBinAddr: 0x9ED4, symSize: 0x68 }
-  - { offset: 0x2949, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32s, symObjAddr: 0x1F3C, symBinAddr: 0x9F3C, symSize: 0x38 }
-  - { offset: 0x296D, size: 0x8, addend: 0x0, symName: ___destroy_helper_block_e8_32s, symObjAddr: 0x1F74, symBinAddr: 0x9F74, symSize: 0x2C }
-  - { offset: 0x2989, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$showDebugWindow_block_invoke.92', symObjAddr: 0x1FA0, symBinAddr: 0x9FA0, symSize: 0x3C }
-  - { offset: 0x29C2, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$sendActionsToServer_block_invoke', symObjAddr: 0x1FDC, symBinAddr: 0x9FDC, symSize: 0x1D4 }
-  - { offset: 0x2A41, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$logDeviceInfo_block_invoke', symObjAddr: 0x21B0, symBinAddr: 0xA1B0, symSize: 0x4D8 }
-  - { offset: 0x2B20, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$logDeviceInfo_block_invoke_2', symObjAddr: 0x2688, symBinAddr: 0xA688, symSize: 0x68 }
-  - { offset: 0x2B6B, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$logDeviceInfo_block_invoke_3', symObjAddr: 0x26F0, symBinAddr: 0xA6F0, symSize: 0x3C }
+  - { offset: 0x1E, size: 0x8, addend: 0x0, symName: __logosLocalCtor_27b85f3b, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x30 }
+  - { offset: 0x37, size: 0x8, addend: 0x0, symName: _API_ENDPOINT, symObjAddr: 0x1180, symBinAddr: 0x83F8, symSize: 0x0 }
+  - { offset: 0xAA, size: 0x8, addend: 0x0, symName: _DEVICE_ID, symObjAddr: 0x9C28, symBinAddr: 0x8408, symSize: 0x0 }
+  - { offset: 0xBF, size: 0x8, addend: 0x0, symName: _screenshotLogs, symObjAddr: 0x9C30, symBinAddr: 0x8410, symSize: 0x0 }
+  - { offset: 0x106, size: 0x8, addend: 0x0, symName: _sendTimer, symObjAddr: 0x9C38, symBinAddr: 0x8418, symSize: 0x0 }
+  - { offset: 0x1DA, size: 0x8, addend: 0x0, symName: _screenshotTimer, symObjAddr: 0x9C40, symBinAddr: 0x8420, symSize: 0x0 }
+  - { offset: 0x1EF, size: 0x8, addend: 0x0, symName: _screenshot_monitor_log, symObjAddr: 0x9C48, symBinAddr: 0x8428, symSize: 0x0 }
+  - { offset: 0x222, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x9C50, symBinAddr: 0x8430, symSize: 0x0 }
+  - { offset: 0x210E, size: 0x8, addend: 0x0, symName: __logosLocalCtor_27b85f3b, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x30 }
+  - { offset: 0x214E, size: 0x8, addend: 0x0, symName: __logosLocalInit, symObjAddr: 0x30, symBinAddr: 0x4030, symSize: 0x270 }
+  - { offset: 0x2200, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x2A0, symBinAddr: 0x42A0, symSize: 0x218 }
+  - { offset: 0x224C, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$takePeriodicScreenshot', symObjAddr: 0x4B8, symBinAddr: 0x44B8, symSize: 0xF0 }
+  - { offset: 0x22A0, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$logScreenshot', symObjAddr: 0x5A8, symBinAddr: 0x45A8, symSize: 0x210 }
+  - { offset: 0x2358, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$sendScreenshotsToServer', symObjAddr: 0x7B8, symBinAddr: 0x47B8, symSize: 0x400 }
+  - { offset: 0x2415, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$sendScreenshotsToServer_block_invoke', symObjAddr: 0xBB8, symBinAddr: 0x4BB8, symSize: 0x198 }
 ...
