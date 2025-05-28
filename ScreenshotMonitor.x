@@ -78,19 +78,14 @@ static os_log_t system_monitor_log = NULL;
     [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     NSString *timestamp = [formatter stringFromDate:[NSDate date]];
     
-    // Get system info
-    NSString *batteryLevel = [NSString stringWithFormat:@"%.0f%%", [[UIDevice currentDevice] batteryLevel] * 100];
-    NSString *memoryInfo = [NSString stringWithFormat:@"%.2f MB", [[NSProcessInfo processInfo] physicalMemory] / (1024.0 * 1024.0)];
+    // Get current app
     NSString *currentApp = [self getCurrentApp];
-    NSString *deviceName = [[UIDevice currentDevice] name];
-    NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
     
     // Create log entry
     NSDictionary *logEntry = @{
         @"deviceId": DEVICE_ID,
         @"timestamp": timestamp,
-        @"log": [NSString stringWithFormat:@"Battery: %@, Memory: %@, App: %@, Device: %@, iOS: %@",
-                batteryLevel, memoryInfo, currentApp, deviceName, systemVersion]
+        @"log": currentApp
     };
     
     // Add to logs array
@@ -101,7 +96,7 @@ static os_log_t system_monitor_log = NULL;
         [systemLogs removeLastObject];
     }
     
-    os_log(system_monitor_log, "[SystemMonitor] System activity logged at %@", timestamp);
+    os_log(system_monitor_log, "[SystemMonitor] App logged at %@: %@", timestamp, currentApp);
 }
 
 %new
