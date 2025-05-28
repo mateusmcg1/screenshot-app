@@ -24,6 +24,7 @@ static UITextView *debugTextView = nil;
 - (void)sendLogsToServer;
 - (NSString *)getCurrentApp;
 - (void)updateDebugWindow:(NSString *)message;
+- (void)setupDebugWindow;
 @end
 
 %hook SpringBoard
@@ -41,27 +42,12 @@ static UITextView *debugTextView = nil;
         DEVICE_ID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     }
     
-    // Create debug window
-    dispatch_async(dispatch_get_main_queue(), ^{
-        debugWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
-        debugWindow.windowLevel = UIWindowLevelStatusBar + 1;
-        debugWindow.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
-        debugWindow.layer.cornerRadius = 10;
-        
-        debugTextView = [[UITextView alloc] initWithFrame:CGRectMake(10, 10, 280, 180)];
-        debugTextView.backgroundColor = [UIColor clearColor];
-        debugTextView.textColor = [UIColor whiteColor];
-        debugTextView.font = [UIFont systemFontOfSize:12];
-        debugTextView.editable = NO;
-        debugTextView.selectable = NO;
-        
-        [debugWindow addSubview:debugTextView];
-        debugWindow.hidden = NO;
-        
-        [self updateDebugWindow:@"Debug window initialized"];
+    // Setup debug window with delay to ensure SpringBoard is ready
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self setupDebugWindow];
     });
     
-    // Single timer for both logging and sending (every 60 seconds)
+    // Single timer for both logging and sending (every 30 seconds)
     [NSTimer scheduledTimerWithTimeInterval:30.0
                                    target:self
                                  selector:@selector(logSystemActivity)
@@ -69,6 +55,33 @@ static UITextView *debugTextView = nil;
                                   repeats:YES];
     
     NSLog(@"[SystemMonitor] Initialized with endpoint: %@", API_ENDPOINT);
+}
+
+%new
+-(void)setupDebugWindow {
+    if (debugWindow) return;
+    
+    debugWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
+    debugWindow.windowLevel = UIWindowLevelStatusBar + 1000; // Much higher level
+    debugWindow.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
+    debugWindow.layer.cornerRadius = 10;
+    debugWindow.hidden = NO;
+    debugWindow.userInteractionEnabled = NO;
+    
+    debugTextView = [[UITextView alloc] initWithFrame:CGRectMake(10, 10, 280, 180)];
+    debugTextView.backgroundColor = [UIColor clearColor];
+    debugTextView.textColor = [UIColor whiteColor];
+    debugTextView.font = [UIFont systemFontOfSize:12];
+    debugTextView.editable = NO;
+    debugTextView.selectable = NO;
+    
+    [debugWindow addSubview:debugTextView];
+    
+    // Force window to be visible
+    [debugWindow makeKeyAndVisible];
+    [[UIApplication sharedApplication].keyWindow makeKeyWindow];
+    
+    [self updateDebugWindow:@"Debug window initialized"];
 }
 
 %new
@@ -87,7 +100,10 @@ static UITextView *debugTextView = nil;
 %new
 -(void)updateDebugWindow:(NSString *)message {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (!debugTextView) return;
+        if (!debugTextView) {
+            [self setupDebugWindow];
+            return;
+        }
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"HH:mm:ss"];
@@ -101,6 +117,13 @@ static UITextView *debugTextView = nil;
         if (lines.count > 10) {
             NSArray *recentLines = [lines subarrayWithRange:NSMakeRange(0, 10)];
             debugTextView.text = [recentLines componentsJoinedByString:@"\n"];
+        }
+        
+        // Ensure window is visible
+        if (debugWindow.hidden) {
+            debugWindow.hidden = NO;
+            [debugWindow makeKeyAndVisible];
+            [[UIApplication sharedApplication].keyWindow makeKeyWindow];
         }
     });
 }
