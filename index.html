@@ -1,22 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Screenshot Monitor Repository</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convite de Aniversário</title>
+  <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bubble@5/bubble.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: url('3e3f05b909aada83320c5482d609aea2.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      color: #fff;
+      text-shadow: 2px 2px 8px #00000080;
+    }
+    .convite-box {
+      background: rgba(255,255,255,0.85);
+      border-radius: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      padding: 40px 32px 32px 32px;
+      max-width: 350px;
+      text-align: center;
+      margin-bottom: 32px;
+      color: #333;
+    }
+    .convite-box h1 {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+      color: #ff7f50;
+    }
+    .convite-box p {
+      font-size: 1.2rem;
+      margin-bottom: 18px;
+    }
+    .btn-confirmar {
+      background: linear-gradient(90deg, #ffb347 0%, #ffcc33 100%);
+      color: #fff;
+      font-size: 1.2rem;
+      font-family: 'Fredoka One', cursive;
+      border: none;
+      border-radius: 24px;
+      padding: 16px 32px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      transition: transform 0.1s, box-shadow 0.1s;
+      margin-top: 10px;
+    }
+    .btn-confirmar:hover {
+      transform: scale(1.07);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+      background: linear-gradient(90deg, #ffcc33 0%, #ffb347 100%);
+    }
+    @media (max-width: 500px) {
+      .convite-box {
+        padding: 24px 8px 20px 8px;
+        max-width: 95vw;
+      }
+      .convite-box h1 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Screenshot Monitor Repository</h1>
-    <p>This is a Cydia/Zebra repository for the Screenshot Monitor tweak.</p>
-    <p>Repository URL: <code>https://mateusmcg1.github.io/screenshot-app/</code></p>
-    <h2>Available Packages:</h2>
-    <ul>
-        <li><a href="packages/com.mateus.screenshotmonitor_0.0.1-35+debug_iphoneos-arm64.deb">ScreenshotMonitor 0.0.1-4 (latest)</a></li>
-        <!-- Add more .deb links here if you want to keep old versions available -->
-    </ul>
-    <h2>Repository Files:</h2>
-    <ul>
-        <li><a href="Packages">Packages</a></li>
-        <li><a href="Packages.gz">Packages.gz</a></li>
-        <li><a href="Release">Release</a></li>
-    </ul>
+  <div class="convite-box">
+    <h1>Você está convidado!</h1>
+    <p>Venha comemorar o aniversário do Bernardo com a gente!<br><br>
+    <b>Data:</b> 26/07<br>
+    <b>Local:</b> Venice Park - Park Sul <br>
+    <b>Horário:</b> 16 hrs<br>
+    </p>
+    <button class="btn-confirmar" id="btnConfirmar">Confirmar Presença</button>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    document.getElementById('btnConfirmar').onclick = function() {
+      Swal.fire({
+        title: 'Vamos lá!',
+        text: 'Você será redirecionado para confirmar sua presença.',
+        icon: 'success',
+        confirmButtonText: 'Ir para o formulário',
+        confirmButtonColor: '#ffb347',
+        background: '#fffbe7',
+        color: '#333',
+        customClass: {
+          popup: 'swal2-bubble'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.open('https://forms.gle/nSpQsostp3ZUw4zY6', '_blank');
+        }
+      });
+    }
+  </script>
 </body>
 </html> 
