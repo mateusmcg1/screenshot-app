@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      background: url('3e3f05b909aada83320c5482d609aea2.jpg') no-repeat center center fixed;
+      background: url('IMG_3159.jpg') no-repeat center center fixed;
       background-size: cover;
       display: flex;
       flex-direction: column;
@@ -86,17 +86,15 @@
         title: 'Vamos lá!',
         text: 'Você será redirecionado para confirmar sua presença.',
         icon: 'success',
-        confirmButtonText: 'Ir para o formulário',
-        confirmButtonColor: '#ffb347',
+        showConfirmButton: false,
+        timer: 1200,
         background: '#fffbe7',
         color: '#333',
         customClass: {
           popup: 'swal2-bubble'
         }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.open('https://forms.gle/nSpQsostp3ZUw4zY6', '_blank');
-        }
+      }).then(() => {
+        window.open('https://forms.gle/nSpQsostp3ZUw4zY6', '_blank');
       });
     }
   </script>
