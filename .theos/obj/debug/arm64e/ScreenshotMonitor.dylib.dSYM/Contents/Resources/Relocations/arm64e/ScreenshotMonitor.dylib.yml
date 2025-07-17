@@ -2,13 +2,16 @@
 triple:          'arm64e-apple-darwin'
 binary-path:     '/Users/automation/app/screenshot-app/.theos/obj/debug/arm64e/ScreenshotMonitor.dylib'
 relocations:
-  - { offset: 0x1E, size: 0x8, addend: 0x0, symName: __logosLocalCtor_f3fcdf02, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x44 }
-  - { offset: 0x37, size: 0x8, addend: 0x0, symName: _DEVICE_ID, symObjAddr: 0x6DE0, symBinAddr: 0xC0B8, symSize: 0x0 }
-  - { offset: 0xAA, size: 0x8, addend: 0x0, symName: _systemLogs, symObjAddr: 0x6DE8, symBinAddr: 0xC0C0, symSize: 0x0 }
-  - { offset: 0xFF, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x6DF0, symBinAddr: 0xC0C8, symSize: 0x0 }
-  - { offset: 0x1F14, size: 0x8, addend: 0x0, symName: __logosLocalCtor_f3fcdf02, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x44 }
-  - { offset: 0x1F54, size: 0x8, addend: 0x0, symName: __logosLocalInit, symObjAddr: 0x44, symBinAddr: 0x4044, symSize: 0x21C }
-  - { offset: 0x1FDD, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x260, symBinAddr: 0x4260, symSize: 0x160 }
-  - { offset: 0x2029, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$getCurrentApp', symObjAddr: 0x3C0, symBinAddr: 0x43C0, symSize: 0x234 }
-  - { offset: 0x20B2, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$logSystemActivity', symObjAddr: 0x5F4, symBinAddr: 0x45F4, symSize: 0x268 }
+  - { offset: 0x1E, size: 0x8, addend: 0x0, symName: __logosLocalCtor_60830715, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x44 }
+  - { offset: 0x37, size: 0x8, addend: 0x0, symName: _blockWindow, symObjAddr: 0xB078, symBinAddr: 0xC1C8, symSize: 0x0 }
+  - { offset: 0x1CCC, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0xB080, symBinAddr: 0xC1D0, symSize: 0x0 }
+  - { offset: 0x2233, size: 0x8, addend: 0x0, symName: __logosLocalCtor_60830715, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x44 }
+  - { offset: 0x2273, size: 0x8, addend: 0x0, symName: __logosLocalInit, symObjAddr: 0x44, symBinAddr: 0x4044, symSize: 0x2A4 }
+  - { offset: 0x2327, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x2E8, symBinAddr: 0x42E8, symSize: 0x80 }
+  - { offset: 0x2367, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$startRemoteMonitoring', symObjAddr: 0x368, symBinAddr: 0x4368, symSize: 0x64 }
+  - { offset: 0x2399, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$checkRemoteCommand', symObjAddr: 0x3CC, symBinAddr: 0x43CC, symSize: 0x300 }
+  - { offset: 0x2456, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$triggerDeviceBlock', symObjAddr: 0x6CC, symBinAddr: 0x46CC, symSize: 0x4CC }
+  - { offset: 0x250D, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$checkRemoteCommand_block_invoke', symObjAddr: 0xB98, symBinAddr: 0x4B98, symSize: 0x1D0 }
+  - { offset: 0x2598, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$checkRemoteCommand_block_invoke_2', symObjAddr: 0xD68, symBinAddr: 0x4D68, symSize: 0x34 }
+  - { offset: 0x25D1, size: 0x8, addend: 0x0, symName: _CGRectMake, symObjAddr: 0xD9C, symBinAddr: 0x4D9C, symSize: 0x4C }
 ...

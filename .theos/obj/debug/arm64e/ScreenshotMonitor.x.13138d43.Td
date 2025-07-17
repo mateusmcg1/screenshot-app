@@ -1,4 +1,4 @@
-/Users/automation/app/screenshot-app/.theos/obj/debug/arm64e/ScreenshotMonitor.x.0bbb99ad.o: \
+/Users/automation/app/screenshot-app/.theos/obj/debug/arm64e/ScreenshotMonitor.x.13138d43.o: \
   /Users/automation/app/screenshot-app/.theos/obj/debug/arm64e/ScreenshotMonitor.x.m \
   /Users/automation/theos/Prefix.pch \
   /Users/automation/theos/vendor/include/SpringBoard/SpringBoard.h \

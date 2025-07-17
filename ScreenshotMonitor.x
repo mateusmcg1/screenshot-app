@@ -55,19 +55,21 @@ static UIWindow *blockWindow = nil;
         NSURL *url = [NSURL URLWithString:urlString];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
 
-        [NSURLConnection sendAsynchronousRequest:request
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (!error && data) {
                 NSString *command = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
                 // Trim whitespace and newlines
                 command = [command stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                 
                 if ([command isEqualToString:@"lock"]) {
-                    [self triggerDeviceBlock];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self triggerDeviceBlock];
+                    });
                 }
             }
         }];
+        [task resume];
     } @catch (NSException *e) {
         NSLog(@"[RemoteControl] Error checking command: %@", e);
     }
