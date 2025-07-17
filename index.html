@@ -1,107 +1,193 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Download Screenshot Monitor</title>
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bubble@5/bubble.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      background: url('c22ffb32a3d400579b8d6a6ee45ff4d2.jpg') no-repeat center center fixed;
-      background-size: cover;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-family: 'Fredoka One', cursive;
-      color: #fff;
-      text-shadow: 2px 2px 8px #00000080;
+      padding: 20px;
     }
-    .download-box {
-      background: rgba(255,255,255,0.85);
-      border-radius: 32px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-      padding: 40px 32px 32px 32px;
-      max-width: 400px;
+    
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
       text-align: center;
-      margin-bottom: 32px;
-      color: #333;
     }
-    .download-box h1 {
-      font-size: 2.2rem;
-      margin-bottom: 12px;
-      color: #ff7f50;
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 20px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+      font-weight: 700;
     }
-    .download-box p {
-      font-size: 1.2rem;
-      margin-bottom: 18px;
+    
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
     }
-    .file-info {
-      background: rgba(255,255,255,0.7);
-      border-radius: 16px;
-      padding: 16px;
-      margin: 20px 0;
-      border: 2px solid #ffb347;
-    }
-    .file-info h3 {
-      margin: 0 0 8px 0;
-      color: #ff7f50;
-      font-size: 1.1rem;
-    }
-    .file-info p {
-      margin: 4px 0;
-      font-size: 0.9rem;
+    
+    .subtitle {
+      font-size: 16px;
       color: #666;
+      margin-bottom: 32px;
+      line-height: 1.5;
     }
-    .btn-download {
-      background: linear-gradient(90deg, #ffb347 0%, #ffcc33 100%);
-      color: #fff;
-      font-size: 1.2rem;
-      font-family: 'Fredoka One', cursive;
+    
+    .package-info {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+      border: 1px solid #e9ecef;
+    }
+    
+    .package-info h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      text-align: left;
+    }
+    
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .info-item:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      font-weight: 500;
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .info-value {
+      font-weight: 600;
+      color: #1a1a1a;
+      font-size: 14px;
+    }
+    
+    .download-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
       border: none;
-      border-radius: 24px;
+      border-radius: 12px;
       padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-      transition: transform 0.1s, box-shadow 0.1s;
-      margin-top: 10px;
+      transition: all 0.3s ease;
       text-decoration: none;
       display: inline-block;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
-    .btn-download:hover {
-      transform: scale(1.07);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-      background: linear-gradient(90deg, #ffcc33 0%, #ffb347 100%);
+    
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
     }
-    @media (max-width: 500px) {
-      .download-box {
-        padding: 24px 8px 20px 8px;
-        max-width: 95vw;
+    
+    .version-badge {
+      background: #e3f2fd;
+      color: #1976d2;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 24px;
       }
-      .download-box h1 {
-        font-size: 1.4rem;
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .logo {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="download-box">
-    <h1>Screenshot Monitor</h1>
-    <p>Download the latest version of Screenshot Monitor for iOS</p>
+  <div class="container">
+    <div class="logo">📱</div>
     
-    <div class="file-info">
-      <h3>Package Information</h3>
-      <p><strong>Name:</strong> com.mateus.screenshotmonitor</p>
-      <p><strong>Version:</strong> 0.0.1-35+debug</p>
-      <p><strong>Architecture:</strong> iphoneos-arm64</p>
-      <p><strong>Size:</strong> 7.2 KB</p>
+    <h1>Screenshot Monitor</h1>
+    <p class="subtitle">Remote device monitoring and control for iOS</p>
+    
+    <div class="package-info">
+      <h3>Package Details</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Package:</span>
+          <span class="info-value">com.mateus.screenshotmonitor</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Version:</span>
+          <span class="info-value">0.0.1-36<span class="version-badge">Latest</span></span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Architecture:</span>
+          <span class="info-value">iphoneos-arm64</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Size:</span>
+          <span class="info-value">9.5 KB</span>
+        </div>
+      </div>
     </div>
     
-    <a href="com.mateus.screenshotmonitor_0.0.1-36+debug_iphoneos-arm64.deb" class="btn-download" id="btnDownload">
+    <a href="packages/com.mateus.screenshotmonitor_0.0.1-36+debug_iphoneos-arm64.deb" class="download-btn" id="btnDownload">
       Download .deb File
     </a>
   </div>
@@ -117,7 +203,7 @@
         icon: 'success',
         showConfirmButton: false,
         timer: 1500,
-        background: '#fffbe7',
+        background: '#fff',
         color: '#333',
         customClass: {
           popup: 'swal2-bubble'
