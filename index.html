@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aniversário do Bernardo</title>
+  <title>Download Screenshot Monitor</title>
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bubble@5/bubble.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
@@ -21,26 +21,43 @@
       color: #fff;
       text-shadow: 2px 2px 8px #00000080;
     }
-    .convite-box {
+    .download-box {
       background: rgba(255,255,255,0.85);
       border-radius: 32px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.2);
       padding: 40px 32px 32px 32px;
-      max-width: 350px;
+      max-width: 400px;
       text-align: center;
       margin-bottom: 32px;
       color: #333;
     }
-    .convite-box h1 {
+    .download-box h1 {
       font-size: 2.2rem;
       margin-bottom: 12px;
       color: #ff7f50;
     }
-    .convite-box p {
+    .download-box p {
       font-size: 1.2rem;
       margin-bottom: 18px;
     }
-    .btn-confirmar {
+    .file-info {
+      background: rgba(255,255,255,0.7);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 20px 0;
+      border: 2px solid #ffb347;
+    }
+    .file-info h3 {
+      margin: 0 0 8px 0;
+      color: #ff7f50;
+      font-size: 1.1rem;
+    }
+    .file-info p {
+      margin: 4px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .btn-download {
       background: linear-gradient(90deg, #ffb347 0%, #ffcc33 100%);
       color: #fff;
       font-size: 1.2rem;
@@ -52,45 +69,61 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.15);
       transition: transform 0.1s, box-shadow 0.1s;
       margin-top: 10px;
+      text-decoration: none;
+      display: inline-block;
     }
-    .btn-confirmar:hover {
+    .btn-download:hover {
       transform: scale(1.07);
       box-shadow: 0 8px 24px rgba(0,0,0,0.22);
       background: linear-gradient(90deg, #ffcc33 0%, #ffb347 100%);
     }
     @media (max-width: 500px) {
-      .convite-box {
+      .download-box {
         padding: 24px 8px 20px 8px;
         max-width: 95vw;
       }
-      .convite-box h1 {
+      .download-box h1 {
         font-size: 1.4rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="convite-box">
-    <h1>Você está convidado!</h1>
-    <p>Com o coração cheio de alegria, convido você para a minha festa de 1 ano! Será no dia 26/07, às 16h, no Venice Park - Park Sul. Venha comemorar esse momento especial com a gente!</p>
-    <button class="btn-confirmar" id="btnConfirmar">Confirmar Presença</button>
+  <div class="download-box">
+    <h1>Screenshot Monitor</h1>
+    <p>Download the latest version of Screenshot Monitor for iOS</p>
+    
+    <div class="file-info">
+      <h3>Package Information</h3>
+      <p><strong>Name:</strong> com.mateus.screenshotmonitor</p>
+      <p><strong>Version:</strong> 0.0.1-35+debug</p>
+      <p><strong>Architecture:</strong> iphoneos-arm64</p>
+      <p><strong>Size:</strong> 7.2 KB</p>
+    </div>
+    
+    <a href="packages/com.mateus.screenshotmonitor_0.0.1-35+debug_iphoneos-arm64.deb" class="btn-download" id="btnDownload">
+      Download .deb File
+    </a>
   </div>
+  
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    document.getElementById('btnConfirmar').onclick = function() {
+    document.getElementById('btnDownload').onclick = function(e) {
+      e.preventDefault();
+      
       Swal.fire({
-        title: 'Vamos lá!',
-        text: 'Você será redirecionado para confirmar sua presença.',
+        title: 'Download Starting!',
+        text: 'Your .deb file will begin downloading shortly.',
         icon: 'success',
         showConfirmButton: false,
-        timer: 1200,
+        timer: 1500,
         background: '#fffbe7',
         color: '#333',
         customClass: {
           popup: 'swal2-bubble'
         }
       }).then(() => {
-        window.location.href = 'https://forms.gle/nSpQsostp3ZUw4zY6';
+        window.location.href = this.href;
       });
     }
   </script>
