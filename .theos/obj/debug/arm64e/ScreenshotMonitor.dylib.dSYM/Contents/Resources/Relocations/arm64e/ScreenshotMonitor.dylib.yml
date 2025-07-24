@@ -2,16 +2,17 @@
 triple:          'arm64e-apple-darwin'
 binary-path:     '/Users/automation/app/screenshot-app/.theos/obj/debug/arm64e/ScreenshotMonitor.dylib'
 relocations:
-  - { offset: 0x1E, size: 0x8, addend: 0x0, symName: __logosLocalCtor_60830715, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x44 }
-  - { offset: 0x37, size: 0x8, addend: 0x0, symName: _blockWindow, symObjAddr: 0xB078, symBinAddr: 0xC1C8, symSize: 0x0 }
-  - { offset: 0x1CCC, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0xB080, symBinAddr: 0xC1D0, symSize: 0x0 }
-  - { offset: 0x2233, size: 0x8, addend: 0x0, symName: __logosLocalCtor_60830715, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x44 }
-  - { offset: 0x2273, size: 0x8, addend: 0x0, symName: __logosLocalInit, symObjAddr: 0x44, symBinAddr: 0x4044, symSize: 0x2A4 }
-  - { offset: 0x2327, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x2E8, symBinAddr: 0x42E8, symSize: 0x80 }
-  - { offset: 0x2367, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$startRemoteMonitoring', symObjAddr: 0x368, symBinAddr: 0x4368, symSize: 0x64 }
-  - { offset: 0x2399, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$checkRemoteCommand', symObjAddr: 0x3CC, symBinAddr: 0x43CC, symSize: 0x300 }
-  - { offset: 0x2456, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$triggerDeviceBlock', symObjAddr: 0x6CC, symBinAddr: 0x46CC, symSize: 0x4CC }
-  - { offset: 0x250D, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$checkRemoteCommand_block_invoke', symObjAddr: 0xB98, symBinAddr: 0x4B98, symSize: 0x1D0 }
-  - { offset: 0x2598, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$checkRemoteCommand_block_invoke_2', symObjAddr: 0xD68, symBinAddr: 0x4D68, symSize: 0x34 }
-  - { offset: 0x25D1, size: 0x8, addend: 0x0, symName: _CGRectMake, symObjAddr: 0xD9C, symBinAddr: 0x4D9C, symSize: 0x4C }
+  - { offset: 0x1E, size: 0x8, addend: 0x0, symName: __logosLocalCtor_9f2e78ec, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x44 }
+  - { offset: 0x45, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x9670, symBinAddr: 0xC108, symSize: 0x0 }
+  - { offset: 0x1ED7, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$startDebugPolling', symObjAddr: 0x9678, symBinAddr: 0xC110, symSize: 0x0 }
+  - { offset: 0x1EFD, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$sendDebugRequest', symObjAddr: 0x9680, symBinAddr: 0xC118, symSize: 0x0 }
+  - { offset: 0x2127, size: 0x8, addend: 0x0, symName: __logosLocalCtor_9f2e78ec, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x44 }
+  - { offset: 0x2167, size: 0x8, addend: 0x0, symName: __logosLocalInit, symObjAddr: 0x44, symBinAddr: 0x4044, symSize: 0xB0 }
+  - { offset: 0x2199, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0xF4, symBinAddr: 0x40F4, symSize: 0x74 }
+  - { offset: 0x21D9, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$startDebugPolling', symObjAddr: 0x168, symBinAddr: 0x4168, symSize: 0x64 }
+  - { offset: 0x220B, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$sendDebugRequest', symObjAddr: 0x1CC, symBinAddr: 0x41CC, symSize: 0x288 }
+  - { offset: 0x22B0, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$sendDebugRequest_block_invoke', symObjAddr: 0x454, symBinAddr: 0x4454, symSize: 0x2D4 }
+  - { offset: 0x2357, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$sendDebugRequest_block_invoke_2', symObjAddr: 0x728, symBinAddr: 0x4728, symSize: 0x148 }
+  - { offset: 0x23C8, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32s, symObjAddr: 0x870, symBinAddr: 0x4870, symSize: 0x3C }
+  - { offset: 0x23EC, size: 0x8, addend: 0x0, symName: ___destroy_helper_block_e8_32s, symObjAddr: 0x8AC, symBinAddr: 0x48AC, symSize: 0x30 }
 ...

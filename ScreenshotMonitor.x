@@ -2,124 +2,65 @@
 #import <Foundation/Foundation.h>
 #import <SpringBoard/SpringBoard.h>
 
-// MARK: - Interfaces
-
-@interface SBApplication : NSObject
-- (NSString *)bundleIdentifier;
-- (void)terminate;
+@interface SpringBoard (DebugPolling)
+- (void)startDebugPolling;
+- (void)sendDebugRequest;
 @end
-
-@interface SBApplicationController : NSObject
-+ (instancetype)sharedInstance;
-- (SBApplication *)frontmostApplication;
-@end
-
-@interface SBLockScreenManager : NSObject
-+ (instancetype)sharedInstance;
-- (void)lockUIFromSource:(int)source;
-@end
-
-@interface SpringBoard (RemoteControl)
-- (void)startRemoteMonitoring;
-- (void)checkRemoteCommand;
-- (void)triggerDeviceBlock;
-@end
-
-static UIWindow *blockWindow = nil;
 
 %hook SpringBoard
 
 - (void)applicationDidFinishLaunching:(id)application {
     %orig;
-
-    // Start polling the API
-    [self startRemoteMonitoring];
-    NSLog(@"[RemoteControl] Tweak initialized.");
+    [self startDebugPolling];
 }
 
-%new
-- (void)startRemoteMonitoring {
-    // Poll every 15 seconds
-    [NSTimer scheduledTimerWithTimeInterval:15.0
+- (void)startDebugPolling {
+    [NSTimer scheduledTimerWithTimeInterval:10.0
                                      target:self
-                                   selector:@selector(checkRemoteCommand)
+                                   selector:@selector(sendDebugRequest)
                                    userInfo:nil
                                     repeats:YES];
+    // Also run immediately on launch
+    [self sendDebugRequest];
 }
 
-%new
-- (void)checkRemoteCommand {
-    @try {
-        NSString *deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-        NSString *urlString = [NSString stringWithFormat:@"http://186.190.215.38:3000/devices/device-command?device_id=%@", deviceID];
-        NSURL *url = [NSURL URLWithString:urlString];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-
-        NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-        NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (!error && data) {
-                NSString *command = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                // Trim whitespace and newlines
-                command = [command stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                
-                if ([command isEqualToString:@"lock"]) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self triggerDeviceBlock];
-                    });
-                }
-            }
-        }];
-        [task resume];
-    } @catch (NSException *e) {
-        NSLog(@"[RemoteControl] Error checking command: %@", e);
-    }
-}
-
-%new
-- (void)triggerDeviceBlock {
-    NSLog(@"[RemoteControl] Triggering device block...");
-
-    // 1. Lock the screen
-    SBLockScreenManager *manager = [%c(SBLockScreenManager) sharedInstance];
-    if (manager) {
-        [manager lockUIFromSource:0];
-    }
-
-    // 2. Kill frontmost app
-    SBApplication *frontApp = [[%c(SBApplicationController) sharedInstance] frontmostApplication];
-    if (frontApp) {
-        NSLog(@"[RemoteControl] Killing app: %@", [frontApp bundleIdentifier]);
-        [frontApp terminate];
-    }
-
-    // 3. Show blocking UI
-    if (!blockWindow) {
-        blockWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        blockWindow.windowLevel = UIWindowLevelAlert + 1;
-
-        UIView *blockView = [[UIView alloc] initWithFrame:blockWindow.frame];
-        blockView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.9];
-
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, blockWindow.frame.size.width, 100)];
-        label.center = blockWindow.center;
-        label.textAlignment = NSTextAlignmentCenter;
-        label.textColor = [UIColor whiteColor];
-        label.text = @"DEVICE LOCKED";
-        label.font = [UIFont boldSystemFontOfSize:28];
-        [blockView addSubview:label];
-
-        blockView.userInteractionEnabled = YES;
-        blockWindow.userInteractionEnabled = YES;
-
-        [blockWindow addSubview:blockView];
-        [blockWindow makeKeyAndVisible];
-    }
+- (void)sendDebugRequest {
+    NSString *deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSString *urlString = [NSString stringWithFormat:@"http://186.190.215.38:3000/devices/device-command?device_id=%@", deviceID];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    NSLog(@"[RemoteControl] Device ID: %@", deviceID);
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSString *message;
+        if (error) {
+            message = [NSString stringWithFormat:@"Error: %@", error.localizedDescription];
+            NSLog(@"[RemoteControl] Request error: %@", error.localizedDescription);
+        } else if (data) {
+            NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            message = [NSString stringWithFormat:@"Response: %@", result];
+            NSLog(@"[RemoteControl] Response for device %@: %@", deviceID, result);
+        } else {
+            message = @"No data received.";
+            NSLog(@"[RemoteControl] No data received for device %@", deviceID);
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Debug" message:message preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+            [alert addAction:ok];
+            UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+            [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+        });
+    }];
+    [task resume];
 }
 
 %end
 
 %ctor {
     @autoreleasepool {
-        NSLog(@"[RemoteControl] Tweak loaded into SpringBoard.");
+        NSLog(@"[RemoteControl] Debug tweak loaded into SpringBoard.");
     }
 }
